@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S2B 정산 관리</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      background: #f5f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    /* 좌측 메뉴 */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 220px;
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 24px 0;
+      transform: translateX(-100%);
+      transition: transform .2s ease;
+      z-index: 20;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar h2 { font-size: 18px; padding: 0 24px 20px; }
+    .sidebar a {
+      display: block;
+      padding: 12px 24px;
+      color: inherit;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .sidebar a:hover, .sidebar a.active { background: #334155; }
+
+    /* 모바일 메뉴 버튼 */
+    .menu-btn {
+      position: fixed;
+      top: 12px; left: 12px;
+      z-index: 30;
+      border: 0;
+      background: #1e293b;
+      color: #fff;
+      font-size: 20px;
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* 중앙 영역 */
+    .main {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main h1 { font-size: 64px; font-weight: 800; letter-spacing: 4px; }
+
+    /* 데스크톱: 메뉴 항상 표시 */
+    @media (min-width: 768px) {
+      .sidebar { transform: none; }
+      .menu-btn { display: none; }
+      .main { margin-left: 220px; }
+      .main h1 { font-size: 96px; }
+    }
+  </style>
+</head>
+<body>
+  <button class="menu-btn" aria-label="메뉴 열기" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <nav class="sidebar">
+    <h2>S2B 정산 관리</h2>
+    <a href="#" class="active">홈</a>
+    <a href="#">주문서 입력</a>
+    <a href="#">발주 관리</a>
+    <a href="#">거래 관리</a>
+    <a href="#">기간별 정산</a>
+  </nav>
+
+  <main class="main">
+    <h1>S2B</h1>
+  </main>
+</body>
+</html>
