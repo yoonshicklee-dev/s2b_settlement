@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>회원 가입 - S2B 정산 관리</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button class="menu-btn" aria-label="메뉴 열기" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+  <nav class="sidebar">
+    <h2>S2B 정산 관리</h2>
+    <a href="/">홈</a>
+    <a href="signup.html" class="active">회원 가입</a>
+    <a href="#">주문서 입력</a>
+    <a href="#">발주 관리</a>
+    <a href="#">거래 관리</a>
+    <a href="#">기간별 정산</a>
+  </nav>
+
+  <main class="main">
+    <form class="form-card" id="signup-form">
+      <h1>회원 가입</h1>
+
+      <label for="userId">사용자 ID</label>
+      <input id="userId" name="userId" type="text" autocomplete="username" required />
+
+      <label for="password">암호</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required />
+
+      <label for="name">이름</label>
+      <input id="name" name="name" type="text" autocomplete="name" required />
+
+      <label for="phone">전화번호</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="010-1234-5678"
+             pattern="0\d{1,2}-?\d{3,4}-?\d{4}" title="예: 010-1234-5678" required />
+
+      <button type="submit">가입하기</button>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const form = this;
+      const button = form.querySelector('button');
+      button.disabled = true;
+      try {
+        const res = await fetch('/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: document.getElementById('userId').value,
+            password: document.getElementById('password').value,
+            name: document.getElementById('name').value,
+            phone: document.getElementById('phone').value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) {
+          alert('회원 가입이 완료되었습니다.\n관리자 승인 후 이용할 수 있습니다.');
+          form.reset();
+        } else {
+          alert(data.error || '회원 가입에 실패했습니다.');
+        }
+      } catch {
+        alert('서버에 연결할 수 없습니다.');
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
