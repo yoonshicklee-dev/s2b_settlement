@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
+import { describeDbError } from '@/lib/dbError'
 import { connectDB } from '@/lib/mongodb'
+import { PASSWORD_MIN_LENGTH, PHONE_PATTERN } from '@/lib/validation'
 import { UserModel } from '@/models/User'
-
-const PHONE_PATTERN = /^0\d{1,2}-?\d{3,4}-?\d{4}$/
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>
@@ -20,8 +20,11 @@ export async function POST(request: Request) {
   if (!userId || !password || !name || !phone) {
     return Response.json({ error: '모든 항목을 입력해 주세요.' }, { status: 400 })
   }
-  if (password.length < 8) {
-    return Response.json({ error: '암호는 8자 이상이어야 합니다.' }, { status: 400 })
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    return Response.json(
+      { error: `암호는 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.` },
+      { status: 400 },
+    )
   }
   if (!PHONE_PATTERN.test(phone)) {
     return Response.json({ error: '전화번호 형식이 올바르지 않습니다.' }, { status: 400 })
@@ -47,19 +50,4 @@ export async function POST(request: Request) {
   }
 
   return Response.json({ ok: true }, { status: 201 })
-}
-
-// 로그를 보지 않아도 원인을 알 수 있도록 오류 종류만 알려 준다 (상세 내용은 노출하지 않음)
-function describeDbError(err: unknown) {
-  const e = err as { name?: string; code?: number; message?: string }
-  if (e.message?.includes('MONGODB_URI')) {
-    return '저장 중 오류가 발생했습니다. (서버에 DB 주소가 설정되지 않음)'
-  }
-  if (e.code === 18 || e.code === 8000 || /auth/i.test(e.message ?? '')) {
-    return '저장 중 오류가 발생했습니다. (DB 인증 실패)'
-  }
-  if (e.name === 'MongooseServerSelectionError' || e.name === 'MongoServerSelectionError') {
-    return '저장 중 오류가 발생했습니다. (DB 서버에 연결할 수 없음)'
-  }
-  return '저장 중 오류가 발생했습니다.'
 }
