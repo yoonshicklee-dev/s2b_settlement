@@ -1,9 +1,12 @@
 'use client'
 
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState, type FormEvent } from 'react'
 import { PASSWORD_MIN_LENGTH, PHONE_PATTERN_SOURCE } from '@/lib/validation'
 
 export default function SignupForm() {
+  const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -20,6 +23,7 @@ export default function SignupForm() {
       if (res.ok) {
         alert('회원 가입이 완료되었습니다.\n관리자 승인 후 이용할 수 있습니다.')
         form.reset()
+        router.push('/login')
       } else {
         alert(data.error || '회원 가입에 실패했습니다.')
       }
@@ -65,6 +69,10 @@ export default function SignupForm() {
       <button type="submit" disabled={submitting}>
         가입하기
       </button>
+
+      <p className="form-footer">
+        이미 계정이 있으신가요? <Link href="/login">로그인</Link>
+      </p>
     </form>
   )
 }

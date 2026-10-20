@@ -29,6 +29,32 @@ body {
 }
 .sidebar a:hover, .sidebar a.active { background: #334155; }
 
+/* 좌측 메뉴 아래쪽: 로그인한 사용자와 로그아웃 */
+.sidebar-user {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 16px 24px;
+  border-top: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+}
+.sidebar-user small { color: #94a3b8; }
+.sidebar-user button {
+  border: 1px solid #475569;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sidebar-user button:hover { background: #334155; }
+
 /* 모바일 메뉴 버튼 */
 .menu-btn {
   position: fixed;
@@ -85,6 +111,17 @@ body {
   cursor: pointer;
 }
 .form-card button:hover { background: #334155; }
+.form-card label.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+.form-card label.checkbox input { width: auto; margin: 0; }
+.form-card .form-footer { margin-top: 16px; text-align: center; font-size: 14px; color: #64748b; }
+.form-card .form-footer a { color: #2563eb; font-weight: 600; }
 .form-card button.secondary { margin-top: 8px; background: #fff; color: #1f2937; border: 1px solid #cbd5e1; }
 .form-card button.secondary:hover { background: #f1f5f9; }
 
@@ -159,6 +196,7 @@ body {
   .sidebar { transform: none; }
   .menu-btn { display: none; }
   .main { margin-left: 220px; padding-top: 24px; }
+  .main.auth { margin-left: 0; }
   .main h1 { font-size: 96px; }
   .form-card h1 { font-size: 24px; }
   .list-card h1 { font-size: 24px; }

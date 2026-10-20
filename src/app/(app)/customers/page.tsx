@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import CustomerTable from '@/components/CustomerTable'
 import Pagination from '@/components/Pagination'
+import { requireUser } from '@/lib/auth'
 import { describeDbError } from '@/lib/dbError'
 import { connectDB } from '@/lib/mongodb'
 import { CustomerModel } from '@/models/Customer'
@@ -12,6 +13,9 @@ const PAGE_SIZE = 10
 type Props = { searchParams: Promise<{ page?: string | string[] }> }
 
 export default async function CustomersPage({ searchParams }: Props) {
+  const user = await requireUser()
+  // 로그인한 사용자가 직접 등록한 고객만 보인다
+  const mine = { ownerUserNo: user.userNo }
   const { page } = await searchParams
   const requested = Math.floor(Number(Array.isArray(page) ? page[0] : page)) || 1
 
@@ -20,10 +24,10 @@ export default async function CustomersPage({ searchParams }: Props) {
   let current: number
   try {
     await connectDB()
-    total = await CustomerModel.countDocuments()
+    total = await CustomerModel.countDocuments(mine)
     // 범위를 벗어난 페이지 번호는 처음/마지막 페이지로 맞춘다
     current = Math.min(Math.max(requested, 1), Math.max(Math.ceil(total / PAGE_SIZE), 1))
-    customers = await CustomerModel.find()
+    customers = await CustomerModel.find(mine)
       .sort({ customerId: -1 }) // 최근 등록한 고객이 위에 오도록
       .skip((current - 1) * PAGE_SIZE)
       .limit(PAGE_SIZE)

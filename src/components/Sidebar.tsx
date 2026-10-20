@@ -1,12 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const MENU = [
   { href: '/', label: '홈' },
-  { href: '/signup', label: '회원 가입' },
   { href: '/customers/new', label: '고객 정보 추가' },
   { href: '/customers', label: '고객 정보 보기' },
   { href: '#', label: '주문서 입력' },
@@ -15,9 +14,18 @@ const MENU = [
   { href: '#', label: '기간별 정산' },
 ]
 
-export default function Sidebar() {
+type Props = { user: { name: string; userId: string } }
+
+export default function Sidebar({ user }: Props) {
   const pathname = usePathname()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
+    router.replace('/login')
+    router.refresh()
+  }
 
   return (
     <>
@@ -38,6 +46,15 @@ export default function Sidebar() {
             {item.label}
           </Link>
         ))}
+
+        <div className="sidebar-user">
+          <span>
+            {user.name} <small>({user.userId})</small>
+          </span>
+          <button type="button" onClick={handleLogout}>
+            로그아웃
+          </button>
+        </div>
       </nav>
     </>
   )

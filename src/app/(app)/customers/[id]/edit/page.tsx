@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import CustomerForm from '@/components/CustomerForm'
+import { requireUser } from '@/lib/auth'
 import { CUSTOMER_FIELDS, parseCustomerId, type CustomerInput } from '@/lib/customerInput'
 import { connectDB } from '@/lib/mongodb'
 import { CustomerModel } from '@/models/Customer'
@@ -15,9 +16,11 @@ type Props = {
 export default async function EditCustomerPage({ params, searchParams }: Props) {
   const customerId = parseCustomerId((await params).id)
   if (customerId === null) notFound()
+  const user = await requireUser()
 
   await connectDB()
-  const customer = await CustomerModel.findOne({ customerId }).lean()
+  // 다른 사용자가 등록한 고객은 없는 것처럼 보인다
+  const customer = await CustomerModel.findOne({ customerId, ownerUserNo: user.userNo }).lean()
   if (!customer) notFound()
 
   // 클라이언트 컴포넌트에는 문자열 항목만 넘긴다 (ObjectId, Date는 넘길 수 없음)

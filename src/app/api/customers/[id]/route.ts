@@ -1,13 +1,18 @@
+import { unauthorized } from '@/lib/auth'
 import { parseCustomerId, parseCustomerInput } from '@/lib/customerInput'
 import { describeDbError } from '@/lib/dbError'
 import { connectDB } from '@/lib/mongodb'
+import { getSession } from '@/lib/session'
 import { CustomerModel } from '@/models/Customer'
 
 type Context = { params: Promise<{ id: string }> }
 
+// 없는 고객과 다른 사용자의 고객을 구분하지 않고 똑같이 알려 준다
 const NOT_FOUND = () => Response.json({ error: '고객 정보를 찾을 수 없습니다.' }, { status: 404 })
 
 export async function PUT(request: Request, { params }: Context) {
+  const user = await getSession()
+  if (!user) return unauthorized()
   const customerId = parseCustomerId((await params).id)
   if (customerId === null) return NOT_FOUND()
 
@@ -25,11 +30,12 @@ export async function PUT(request: Request, { params }: Context) {
 
   try {
     await connectDB()
-    // 고객 번호는 바꾸지 않고 나머지 항목만 고친다
-    const customer = await CustomerModel.findOneAndUpdate({ customerId }, input.data, {
-      returnDocument: 'after',
-      runValidators: true,
-    })
+    // 고객 번호와 등록한 사용자는 바꾸지 않고 나머지 항목만 고친다
+    const customer = await CustomerModel.findOneAndUpdate(
+      { customerId, ownerUserNo: user.userNo },
+      input.data,
+      { returnDocument: 'after', runValidators: true },
+    )
     if (!customer) return NOT_FOUND()
     return Response.json({ ok: true })
   } catch (err) {
@@ -39,12 +45,14 @@ export async function PUT(request: Request, { params }: Context) {
 }
 
 export async function DELETE(_request: Request, { params }: Context) {
+  const user = await getSession()
+  if (!user) return unauthorized()
   const customerId = parseCustomerId((await params).id)
   if (customerId === null) return NOT_FOUND()
 
   try {
     await connectDB()
-    const { deletedCount } = await CustomerModel.deleteOne({ customerId })
+    const { deletedCount } = await CustomerModel.deleteOne({ customerId, ownerUserNo: user.userNo })
     if (deletedCount === 0) return NOT_FOUND()
     return Response.json({ ok: true })
   } catch (err) {

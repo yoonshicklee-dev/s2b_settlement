@@ -5,6 +5,8 @@ const customerSchema = new Schema(
   {
     // 1부터 자동으로 매겨지는 고객 번호 (직접 넣지 않는다)
     customerId: { type: Number, required: true, unique: true, immutable: true },
+    // 이 고객을 등록한 사용자의 userNo. 사용자는 자기가 등록한 고객만 보고 고칠 수 있다
+    ownerUserNo: { type: Number, required: true, immutable: true, index: true },
     name: { type: String, trim: true },
     account: { type: String, trim: true },
     phone: { type: String, trim: true },
