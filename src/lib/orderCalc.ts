@@ -18,8 +18,9 @@ export function calcItem(unitPrice: number, quantity: number, vatType: VatType):
     const vat = Math.floor(amount / 10)
     return { supply: amount, vat, total: amount + vat }
   }
-  // 부가세 포함: 단가 × 수량이 합산 금액이고, 10%를 부가세, 나머지 90%를 상품가액으로 나눈다
-  const vat = Math.floor(amount / 10)
+  // 부가세 포함: 단가 × 수량이 합산 금액이고, 상품가액 : 부가세 = 100 : 10 으로 나눈다
+  // (부가세 = 합산 금액의 1/11, 상품가액 = 합산 금액 - 부가세)
+  const vat = Math.floor(amount / 11)
   return { supply: amount - vat, vat, total: amount }
 }
 
