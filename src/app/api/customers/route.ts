@@ -5,6 +5,29 @@ import { connectDB } from '@/lib/mongodb'
 import { getSession } from '@/lib/session'
 import { CustomerModel } from '@/models/Customer'
 
+const PICKER_LIMIT = 1000
+
+// 주문서의 고객 선택 창에서 쓰는 내 고객 목록 (이름순)
+export async function GET() {
+  const user = await getSession()
+  if (!user) return unauthorized()
+
+  try {
+    await connectDB()
+    const customers = await CustomerModel.find(
+      { ownerUserNo: user.userNo },
+      { _id: 0, customerId: 1, name: 1, businessNumber: 1, managerName: 1, phone: 1 },
+    )
+      .sort({ name: 1 })
+      .limit(PICKER_LIMIT)
+      .lean()
+    return Response.json({ customers })
+  } catch (err) {
+    console.error('고객 목록 조회 실패', err)
+    return Response.json({ error: describeDbError(err).replace('저장', '조회') }, { status: 500 })
+  }
+}
+
 export async function POST(request: Request) {
   const user = await getSession()
   if (!user) return unauthorized()

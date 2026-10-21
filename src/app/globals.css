@@ -128,7 +128,7 @@ body {
 /* 목록 화면 */
 .list-card {
   width: 100%;
-  max-width: 960px;
+  max-width: 1200px;
   align-self: flex-start;
 }
 .list-card h1 { font-size: 22px; letter-spacing: 0; font-weight: 700; margin-bottom: 16px; }
@@ -142,10 +142,10 @@ body {
   box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
 }
 
-/* 고객 표: 모바일에서는 행마다 카드로 보인다 */
-.customer-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.customer-table thead { display: none; }
-.customer-table tr {
+/* 목록 표 (고객, 주문서): 모바일에서는 행마다 카드로 보인다 */
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table thead { display: none; }
+.data-table tr {
   display: block;
   background: #fff;
   border-radius: 12px;
@@ -153,8 +153,9 @@ body {
   margin-bottom: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
 }
-.customer-table td { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
-.customer-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; }
+.data-table td { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.data-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; }
+.data-table td.strong { font-weight: 700; }
 
 /* 행의 수정/삭제 버튼 */
 .row-actions { display: inline-flex; gap: 6px; }
@@ -191,6 +192,151 @@ body {
 .pagination .current { background: #1e293b; border-color: #1e293b; color: #fff; font-weight: 600; }
 .pagination .disabled { color: #cbd5e1; }
 
+/* 주문서 입력 */
+.order-card { width: 100%; max-width: 960px; align-self: flex-start; }
+.order-card h1 { font-size: 22px; letter-spacing: 0; font-weight: 700; margin-bottom: 16px; }
+.order-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+}
+.section-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.section-title h2 { font-size: 17px; }
+.order-card .placeholder { color: #64748b; font-size: 14px; }
+.btn-outline, .btn-text {
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.btn-outline { padding: 8px 14px; border: 1px solid #1e293b; background: #fff; color: #1e293b; font-weight: 600; }
+.btn-outline:hover { background: #f1f5f9; }
+.btn-text { padding: 4px 8px; border: 0; background: none; color: #475569; }
+.btn-text.danger { color: #dc2626; }
+.btn-text:hover { background: #f1f5f9; }
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary:hover { background: #334155; }
+.btn-primary:disabled { opacity: .6; cursor: default; }
+.btn-secondary {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f2937;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: #f1f5f9; }
+
+.customer-summary { display: grid; gap: 8px; }
+.customer-summary div, .item-amounts div { display: flex; justify-content: space-between; gap: 12px; }
+.customer-summary dt, .item-amounts dt { color: #64748b; font-size: 14px; }
+.customer-summary dd { font-weight: 600; }
+
+.item-list { list-style: none; display: grid; gap: 12px; }
+.item-row { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+.item-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; min-height: 28px; }
+.item-no {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #e2e8f0; font-size: 13px; font-weight: 700;
+}
+.item-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.item-fields .field-name, .item-fields .vat-toggle { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; min-width: 0; }
+.field input[type="text"], .field input[type="number"] {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+}
+.field input:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+.vat-toggle { border: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+.vat-toggle legend { float: left; margin-right: 8px; }
+.vat-toggle label { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; font-size: 14px; cursor: pointer; }
+.item-amounts { display: grid; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0; font-size: 14px; }
+.item-amounts .sum dd { font-weight: 700; }
+
+.order-totals {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: grid;
+  gap: 8px;
+}
+.order-totals div { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+.order-totals .grand { border-top: 1px solid #475569; padding-top: 10px; font-size: 18px; color: #fff; }
+
+/* 고객 선택 창 */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, .5);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 50;
+}
+.modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.modal-header h2 { font-size: 18px; }
+.modal-close { border: 0; background: none; font-size: 26px; line-height: 1; cursor: pointer; color: #64748b; }
+.modal-search {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.modal-body { overflow-y: auto; }
+.modal-empty { color: #64748b; text-align: center; padding: 32px 8px; font-size: 14px; }
+.picker-list { list-style: none; display: grid; gap: 8px; }
+.picker-list button {
+  width: 100%;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.picker-list button:hover { border-color: #3b82f6; background: #eff6ff; }
+.picker-list span { font-size: 14px; color: #334155; }
+.picker-list small { font-size: 13px; color: #64748b; }
+
 /* 데스크톱: 메뉴 항상 표시 */
 @media (min-width: 768px) {
   .sidebar { transform: none; }
@@ -199,23 +345,32 @@ body {
   .main.auth { margin-left: 0; }
   .main h1 { font-size: 96px; }
   .form-card h1 { font-size: 24px; }
-  .list-card h1 { font-size: 24px; }
+  .list-card h1, .order-card h1 { font-size: 24px; }
+  .order-section { padding: 20px 24px; }
+  .item-fields { grid-template-columns: 2fr 1fr 1fr; }
+  .item-fields .field-name { grid-column: auto; }
+  .item-amounts { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .item-amounts div { flex-direction: column; gap: 2px; }
+  .order-totals { padding: 20px 24px; }
+  .modal-backdrop { align-items: center; }
+  .modal { border-radius: 16px; }
 
-  .customer-table {
+  .data-table {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
   }
-  .customer-table thead { display: table-header-group; }
-  .customer-table tr { display: table-row; padding: 0; margin: 0; border-radius: 0; box-shadow: none; }
-  .customer-table th, .customer-table td {
+  .data-table thead { display: table-header-group; }
+  .data-table tr { display: table-row; padding: 0; margin: 0; border-radius: 0; box-shadow: none; }
+  .data-table th, .data-table td {
     display: table-cell;
     padding: 12px 16px;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
   }
-  .customer-table th { background: #f1f5f9; font-weight: 600; color: #475569; }
-  .customer-table tbody tr:last-child td { border-bottom: 0; }
-  .customer-table td::before { display: none; }
+  .data-table th { background: #f1f5f9; font-weight: 600; color: #475569; }
+  .data-table tbody tr:last-child td { border-bottom: 0; }
+  .data-table td::before { display: none; }
+  .data-table th.num, .data-table td.num { text-align: right; white-space: nowrap; }
 }

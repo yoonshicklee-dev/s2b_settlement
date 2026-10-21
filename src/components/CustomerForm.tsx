@@ -57,9 +57,6 @@ export default function CustomerForm({ customer, returnPage = 1 }: Props) {
         required
       />
 
-      <label htmlFor="account">고객 계정</label>
-      <input id="account" name="account" type="text" autoComplete="off" defaultValue={customer?.account} />
-
       <label htmlFor="phone">전화번호</label>
       <input
         id="phone"
@@ -68,6 +65,26 @@ export default function CustomerForm({ customer, returnPage = 1 }: Props) {
         autoComplete="tel"
         placeholder="02-123-4567"
         defaultValue={customer?.phone}
+      />
+
+      <label htmlFor="mobilePhone">휴대폰 전화 번호</label>
+      <input
+        id="mobilePhone"
+        name="mobilePhone"
+        type="tel"
+        autoComplete="tel"
+        placeholder="010-1234-5678"
+        defaultValue={customer?.mobilePhone}
+      />
+
+      <label htmlFor="fax">팩스 번호</label>
+      <input
+        id="fax"
+        name="fax"
+        type="tel"
+        autoComplete="off"
+        placeholder="02-123-4568"
+        defaultValue={customer?.fax}
       />
 
       <label htmlFor="managerName">담당자 이름</label>
@@ -88,6 +105,16 @@ export default function CustomerForm({ customer, returnPage = 1 }: Props) {
         autoComplete="off"
         placeholder="123-45-67890"
         defaultValue={customer?.businessNumber}
+      />
+
+      <label htmlFor="address">주소</label>
+      <input
+        id="address"
+        name="address"
+        type="text"
+        autoComplete="street-address"
+        placeholder="서울특별시 중구 세종대로 110"
+        defaultValue={customer?.address}
       />
 
       <button type="submit" disabled={submitting}>

@@ -1,19 +1,18 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { decryptSession, SESSION_COOKIE } from '@/lib/sessionToken'
 
-// 로그인 없이 열 수 있는 주소
-const PUBLIC_PAGES = ['/login', '/signup']
-const PUBLIC_APIS = ['/api/auth/login', '/api/signup']
+// 로그인 없이 열 수 있는 주소 (회원 가입은 로그인한 상태에서도 열 수 있다)
+const PUBLIC_PATHS = ['/signup', '/api/auth/login', '/api/signup']
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
   const user = await decryptSession(request.cookies.get(SESSION_COOKIE)?.value)
 
-  if (PUBLIC_PAGES.includes(pathname)) {
-    // 이미 로그인했으면 로그인/회원 가입 화면 대신 홈으로 보낸다
+  if (pathname === '/login') {
+    // 이미 로그인했으면 로그인 화면 대신 홈으로 보낸다
     return user ? NextResponse.redirect(new URL('/', request.url)) : NextResponse.next()
   }
-  if (user || PUBLIC_APIS.includes(pathname)) {
+  if (user || PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next()
   }
 

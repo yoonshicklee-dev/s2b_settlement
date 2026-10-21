@@ -6,9 +6,11 @@ import { useState } from 'react'
 
 const MENU = [
   { href: '/', label: '홈' },
+  { href: '/signup', label: '회원 가입' },
   { href: '/customers/new', label: '고객 정보 추가' },
   { href: '/customers', label: '고객 정보 보기' },
-  { href: '#', label: '주문서 입력' },
+  { href: '/orders/new', label: '주문서 입력' },
+  { href: '/orders', label: '주문서 리스트 보기' },
   { href: '#', label: '발주 관리' },
   { href: '#', label: '거래 관리' },
   { href: '#', label: '기간별 정산' },

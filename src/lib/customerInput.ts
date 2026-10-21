@@ -1,5 +1,13 @@
 // 등록(POST)과 수정(PUT)이 같은 규칙으로 요청 값을 읽도록 한 곳에서 정의한다
-export const CUSTOMER_FIELDS = ['name', 'account', 'phone', 'managerName', 'businessNumber'] as const
+export const CUSTOMER_FIELDS = [
+  'name',
+  'phone',
+  'mobilePhone',
+  'fax',
+  'managerName',
+  'businessNumber',
+  'address',
+] as const
 
 export type CustomerInput = Record<(typeof CUSTOMER_FIELDS)[number], string>
 

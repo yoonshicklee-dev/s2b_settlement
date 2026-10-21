@@ -1,19 +1,21 @@
-import CustomerActions from '@/components/CustomerActions'
+import RowActions from '@/components/RowActions'
 import type { Customer } from '@/models/Customer'
 
 const COLUMNS = [
   { key: 'customerId', label: '번호' },
   { key: 'name', label: '고객 이름' },
-  { key: 'account', label: '고객 계정' },
   { key: 'phone', label: '전화번호' },
+  { key: 'mobilePhone', label: '휴대폰 전화 번호' },
+  { key: 'fax', label: '팩스 번호' },
   { key: 'managerName', label: '담당자 이름' },
   { key: 'businessNumber', label: '사업자 등록 번호' },
+  { key: 'address', label: '주소' },
 ] as const
 
-// 데스크톱에서는 표로, 모바일에서는 고객마다 카드 한 장으로 보인다 (globals.css의 .customer-table)
+// 데스크톱에서는 표로, 모바일에서는 고객마다 카드 한 장으로 보인다 (globals.css의 .data-table)
 export default function CustomerTable({ customers, page }: { customers: Customer[]; page: number }) {
   return (
-    <table className="customer-table">
+    <table className="data-table">
       <thead>
         <tr>
           {COLUMNS.map((col) => (
@@ -31,7 +33,11 @@ export default function CustomerTable({ customers, page }: { customers: Customer
               </td>
             ))}
             <td data-label="관리">
-              <CustomerActions customerId={customer.customerId} name={customer.name ?? ''} page={page} />
+              <RowActions
+                editHref={`/customers/${customer.customerId}/edit?page=${page}`}
+                deleteUrl={`/api/customers/${customer.customerId}`}
+                target={`'${customer.name ?? ''}' 고객 정보`}
+              />
             </td>
           </tr>
         ))}
